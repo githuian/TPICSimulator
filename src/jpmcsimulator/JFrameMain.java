@@ -79,8 +79,14 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
             }
         });
 
+        jScrollPane1.setBorder(javax.swing.BorderFactory.createTitledBorder("Report"));
+
+        jEditorPaneResult.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jScrollPane1.setViewportView(jEditorPaneResult);
 
+        jScrollPaneResultList.setBorder(javax.swing.BorderFactory.createTitledBorder("Results List"));
+
+        jListDir.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jListDir.setModel(resultDataModel);
         jListDir.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -96,6 +102,7 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
             }
         });
 
+        jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder("Configuration File"));
         jScrollPane2.setViewportView(jTextPaneConfig);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -111,7 +118,7 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPaneResultList, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPaneResultList, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
                             .addComponent(jButtonSimulate, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
