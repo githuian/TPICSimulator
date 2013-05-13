@@ -7,7 +7,6 @@ package controller;
 import com.predic8.wsdl.*;
 import com.predic8.wstool.creator.RequestTemplateCreator;
 import com.predic8.wstool.creator.SOARequestCreator;
-import com.sun.xml.internal.ws.api.server.SDDocument.WSDL;
 import groovy.xml.MarkupBuilder;
 import java.io.File;
 import java.io.FileNotFoundException;

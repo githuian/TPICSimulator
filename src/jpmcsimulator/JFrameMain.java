@@ -113,6 +113,9 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
         });
 
         jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder("Configuration File"));
+
+        jTextPaneConfig.setEditable(false);
+        jTextPaneConfig.setPreferredSize(new java.awt.Dimension(6, 34));
         jScrollPane2.setViewportView(jTextPaneConfig);
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
@@ -126,22 +129,22 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButtonConfiguration)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPaneResultList, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                            .addComponent(jScrollPaneResultList, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabelStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButtonSimulate, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabelStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE)))
+                                    .addComponent(jButtonConfiguration)
+                                    .addComponent(jButtonSimulate, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(7, 7, 7)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jScrollPane1))))
+                                .addGap(0, 493, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -150,17 +153,17 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
                 .addContainerGap()
                 .addComponent(jButtonConfiguration)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonSimulate)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
-                    .addComponent(jScrollPaneResultList, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
+                    .addComponent(jScrollPaneResultList, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelStatus))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelStatus)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -192,11 +195,7 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
         //
 
         // TODO add your handling code here:
-        if (task.isDone()) {
-            
-
-        }
-
+        
 
     }//GEN-LAST:event_jButtonSimulateActionPerformed
 
@@ -321,7 +320,7 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
             System.out.println("python finished");
             resultDataModel.refresh();
             jButtonSimulate.setEnabled(false);
-            System.out.println("reprots "+ jListDir.getModel().getSize());
+            System.out.println("reports "+ jListDir.getModel().getSize());
             jListDir.setSelectedIndex(jListDir.getModel().getSize()-1);
 
 
@@ -377,8 +376,8 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
                 //Logger.getLogger(JFrameMain.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
                 System.out.println("return");
-                resultDataModel.refresh();
-                jButtonSimulate.setEnabled(true);
+                
+                
                 return;
             }
         }
