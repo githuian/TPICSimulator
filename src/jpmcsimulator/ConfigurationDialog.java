@@ -4,7 +4,6 @@
  */
 package jpmcsimulator;
 
-import com.predic8.wsdl.Operation;
 import controller.ConfigHandler;
 import controller.OperationData;
 import controller.ParaData;

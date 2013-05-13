@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,9 +26,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingWorker;
+import javax.swing.Timer;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteException;
+import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.io.FileUtils;
 
 /**
@@ -67,6 +70,8 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextPaneConfig = new javax.swing.JTextPane();
         jProgressBarTask = new javax.swing.JProgressBar();
+        jSeparator1 = new javax.swing.JSeparator();
+        jLabelStatus = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("JPMC WebService Simulator");
@@ -78,6 +83,7 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
                 jButtonSimulateActionPerformed(evt);
             }
         });
+        jButtonSimulate.setEnabled(false);
 
         jScrollPane1.setBorder(javax.swing.BorderFactory.createTitledBorder("Report"));
 
@@ -88,6 +94,7 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
 
         jListDir.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jListDir.setModel(resultDataModel);
+        resultDataModel.refresh();
         jListDir.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 jListDirValueChanged(evt);
@@ -105,6 +112,8 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
         jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder("Configuration File"));
         jScrollPane2.setViewportView(jTextPaneConfig);
 
+        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -119,12 +128,17 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPaneResultList, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                            .addComponent(jButtonSimulate, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButtonSimulate, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabelStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jProgressBarTask, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(164, 164, 164))
+                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jProgressBarTask, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(jScrollPane1))))
                 .addContainerGap())
         );
@@ -136,13 +150,17 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonSimulate)
-                    .addComponent(jProgressBarTask, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jButtonSimulate)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
-                    .addComponent(jScrollPaneResultList, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE))
+                    .addComponent(jScrollPaneResultList, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jProgressBarTask, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jSeparator1))
+                    .addComponent(jLabelStatus))
                 .addContainerGap())
         );
 
@@ -151,10 +169,7 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
 
     private void jButtonSimulateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSimulateActionPerformed
 
-        progressMonitor = new ProgressMonitor(this,
-                "Running a Long Task", "", 0, 100);
 
-        progressMonitor.setProgress(0);
         jProgressBarTask.setVisible(true);
         jProgressBarTask.setIndeterminate(true);
         jButtonSimulate.setEnabled(false);
@@ -162,6 +177,23 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
         task.addPropertyChangeListener(this);
         task.execute();
         //startButton.setEnabled(false);
+
+        long startTime;
+        //
+
+        Timer timer = new Timer(100, new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+
+                
+            }
+        });
+        timer.setRepeats(true);
+        timer.start();
+
+
+
+
+        //
 
         // TODO add your handling code here:
         if (task.isDone()) {
@@ -184,7 +216,9 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
                 Logger.getLogger(JFrameMain.class.getName()).log(Level.SEVERE, null, ex);
             }
             jTextPaneConfig.setText(result);
+            
             System.out.println("closed");
+            jButtonSimulate.setEnabled(true);
         }
 
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -248,11 +282,13 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonSimulate;
     private javax.swing.JEditorPane jEditorPaneResult;
+    private javax.swing.JLabel jLabelStatus;
     private javax.swing.JList jListDir;
     private javax.swing.JProgressBar jProgressBarTask;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPaneResultList;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextPane jTextPaneConfig;
     // End of variables declaration//GEN-END:variables
 
@@ -284,7 +320,8 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
 
         @Override
         protected void done() {
-            jProgressBarTask.setVisible(false);
+            jProgressBarTask.setIndeterminate(false);
+            System.out.println("python finished");
 
 
         }
@@ -294,9 +331,7 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
 
         @Override
         protected Void doInBackground() {
-            Random random = new Random();
-            int progress = 0;
-            setProgress(0);
+
 //            try {
             runPy();
             //pr.waitFor();
@@ -322,14 +357,22 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
             executor.setWorkingDirectory(new File("./WSDLTest"));
             executor.setExitValue(1);
             try {
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+
+                PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream);
+                executor.setStreamHandler(streamHandler);
+
+
                 int exitValue = executor.execute(commandLine);
+                jLabelStatus.setText(outputStream.toString());
             } catch (ExecuteException ex) {
                 System.out.println("Exe Excepiton");
-                
+
                 //Logger.getLogger(JFrameMain.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 System.out.println("IO Excepiton");
-                
+
                 //Logger.getLogger(JFrameMain.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
                 System.out.println("return");
