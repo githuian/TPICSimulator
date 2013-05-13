@@ -25,6 +25,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ProgressMonitor;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
 import org.apache.commons.exec.CommandLine;
@@ -44,6 +45,9 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
     private ProgressMonitor progressMonitor;
     private PyHandler task;
     public static final String FOLDER = "./WSDLTest/projects/soap_test/";
+    static ProgressMonitor pbar;
+    static int secs;
+    static int counter = 0;
 
     /**
      * Creates new form JFrameMain
@@ -66,10 +70,9 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
         jEditorPaneResult = new javax.swing.JEditorPane();
         jScrollPaneResultList = new javax.swing.JScrollPane();
         jListDir = new javax.swing.JList();
-        jButton1 = new javax.swing.JButton();
+        jButtonConfiguration = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextPaneConfig = new javax.swing.JTextPane();
-        jProgressBarTask = new javax.swing.JProgressBar();
         jSeparator1 = new javax.swing.JSeparator();
         jLabelStatus = new javax.swing.JLabel();
 
@@ -102,10 +105,10 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
         });
         jScrollPaneResultList.setViewportView(jListDir);
 
-        jButton1.setText("Configration...");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonConfiguration.setText("Configration...");
+        jButtonConfiguration.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonConfigurationActionPerformed(evt);
             }
         });
 
@@ -123,7 +126,7 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(jButtonConfiguration)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -137,8 +140,7 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jProgressBarTask, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(jScrollPane1))))
                 .addContainerGap())
         );
@@ -146,7 +148,7 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
+                .addComponent(jButtonConfiguration)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -157,9 +159,7 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
                     .addComponent(jScrollPaneResultList, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jProgressBarTask, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jSeparator1))
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelStatus))
                 .addContainerGap())
         );
@@ -170,41 +170,37 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
     private void jButtonSimulateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSimulateActionPerformed
 
 
-        jProgressBarTask.setVisible(true);
-        jProgressBarTask.setIndeterminate(true);
-        jButtonSimulate.setEnabled(false);
+        //jProgressBarTask.setVisible(true);
+        //jProgressBarTask.setIndeterminate(true);
+        //jButtonSimulate.setEnabled(false);
         task = new PyHandler();
         task.addPropertyChangeListener(this);
         task.execute();
         //startButton.setEnabled(false);
 
-        long startTime;
         //
+        pbar = new ProgressMonitor(null, "Time Approx Total : " + secs + " secs",
+                "Initializing...", 0, 100);
 
-        Timer timer = new Timer(100, new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
 
-                
-            }
-        });
-        timer.setRepeats(true);
+        // Fire a timer every once in a while to update the progress.
+        System.out.println("timer=" + secs);
+        Timer timer = new Timer(secs * 10, this);
         timer.start();
-
-
-
+        setVisible(true);
 
         //
 
         // TODO add your handling code here:
         if (task.isDone()) {
-            resultDataModel.refresh();
-            jButtonSimulate.setEnabled(true);
+            
+
         }
 
 
     }//GEN-LAST:event_jButtonSimulateActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButtonConfigurationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfigurationActionPerformed
         // TODO add your handling code here:
         ConfigurationDialog dialog = new ConfigurationDialog(this, true);
         dialog.setVisible(true);
@@ -216,12 +212,12 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
                 Logger.getLogger(JFrameMain.class.getName()).log(Level.SEVERE, null, ex);
             }
             jTextPaneConfig.setText(result);
-            
-            System.out.println("closed");
+
+            System.out.println("COnfiguration Dialog closed");
             jButtonSimulate.setEnabled(true);
         }
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jButtonConfigurationActionPerformed
 
     private void jListDirValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListDirValueChanged
         // TODO add your handling code here:
@@ -279,12 +275,11 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButtonConfiguration;
     private javax.swing.JButton jButtonSimulate;
     private javax.swing.JEditorPane jEditorPaneResult;
     private javax.swing.JLabel jLabelStatus;
     private javax.swing.JList jListDir;
-    private javax.swing.JProgressBar jProgressBarTask;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPaneResultList;
@@ -294,34 +289,40 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        SwingUtilities.invokeLater(new Update());
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName()) {
-            int progress = (Integer) evt.getNewValue();
-            progressMonitor.setProgress(progress);
-            String message = String.format("Completed %d%%.\n", progress);
-            progressMonitor.setNote(message);
-
-            if (progressMonitor.isCanceled() || task.isDone()) {
-
-                if (progressMonitor.isCanceled()) {
-                    task.cancel(true);
-
-                } else {
-                }
-
-            }
-        }
+//        if ("progress" == evt.getPropertyName()) {
+//            int progress = (Integer) evt.getNewValue();
+//            progressMonitor.setProgress(progress);
+//            String message = String.format("Completed %d%%.\n", progress);
+//            progressMonitor.setNote(message);
+//
+//            if (progressMonitor.isCanceled() || task.isDone()) {
+//
+//                if (progressMonitor.isCanceled()) {
+//                    task.cancel(true);
+//
+//                } else {
+//                }
+//
+//            }
+//        }
     }
 
     private class PyHandler extends SwingWorker<Void, Void> {
 
         @Override
         protected void done() {
-            jProgressBarTask.setIndeterminate(false);
+            //jProgressBarTask.setIndeterminate(false);
+            
             System.out.println("python finished");
+            resultDataModel.refresh();
+            jButtonSimulate.setEnabled(false);
+            System.out.println("reprots "+ jListDir.getModel().getSize());
+            jListDir.setSelectedIndex(jListDir.getModel().getSize()-1);
 
 
         }
@@ -380,6 +381,30 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
                 jButtonSimulate.setEnabled(true);
                 return;
             }
+        }
+    }
+
+    class Update implements Runnable {
+
+        public void run() {
+            if (pbar.isCanceled()) {
+                task.cancel(true);
+                pbar.close();
+                //System.exit(1);
+            }
+            if (!task.isDone()) {
+                pbar.setProgress(Math.min(counter, 99));
+                if (counter > 99) {
+                    pbar.setNote("Generating reports...");
+                } else {
+                    pbar.setNote("Operation is " + Math.min(counter, 99) + "% complete");
+                }
+                counter += 1;
+                return;
+            }
+            pbar.setProgress(counter);
+            pbar.setNote("Operation is " + counter + "% complete");
+            counter += 1;
         }
     }
 }

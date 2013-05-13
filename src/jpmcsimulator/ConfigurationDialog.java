@@ -74,11 +74,11 @@ public class ConfigurationDialog extends javax.swing.JDialog {
         jTextFieldRampUpTime = new javax.swing.JTextField();
         jTextFieldThreads = new javax.swing.JTextField();
         jButtonSave = new javax.swing.JButton();
-        jButtonCancel = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jTextFieldInterval = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         jListPara = new javax.swing.JList();
+        jLabel7 = new javax.swing.JLabel();
 
         jMenuItemAddFile.setText("Set Parameters...");
         jPopupMenuTestOperation.add(jMenuItemAddFile);
@@ -87,6 +87,7 @@ public class ConfigurationDialog extends javax.swing.JDialog {
         jPopupMenuTestOperation.add(jMenuItem1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setText("WSDL :");
 
@@ -134,7 +135,7 @@ public class ConfigurationDialog extends javax.swing.JDialog {
             }
         });
 
-        jLabel2.setText("Test Operations:");
+        jLabel2.setText("Test Operations(right click for more options):");
 
         jLabel3.setText("Run Time:");
 
@@ -155,8 +156,6 @@ public class ConfigurationDialog extends javax.swing.JDialog {
             }
         });
 
-        jButtonCancel.setText("Cancel");
-
         jLabel6.setText("Interval:");
 
         jTextFieldInterval.setText("10");
@@ -168,6 +167,8 @@ public class ConfigurationDialog extends javax.swing.JDialog {
             }
         });
         jScrollPane3.setViewportView(jListPara);
+
+        jLabel7.setText("Parameters:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -184,20 +185,17 @@ public class ConfigurationDialog extends javax.swing.JDialog {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                    .addComponent(jScrollPane1)
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel4)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(jLabel3)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jButtonSave)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jButtonCancel))
                                             .addComponent(jLabel5)
-                                            .addComponent(jLabel6))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(jLabel6)
+                                            .addComponent(jButtonSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGap(18, 18, 18)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jTextFieldThreads, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+                                            .addComponent(jTextFieldThreads)
                                             .addComponent(jTextFieldRunTime)
                                             .addComponent(jTextFieldRampUpTime)
                                             .addComponent(jTextFieldInterval))))
@@ -214,7 +212,8 @@ public class ConfigurationDialog extends javax.swing.JDialog {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jScrollPane2)
                             .addComponent(jLabel2)
-                            .addComponent(jScrollPane3))))
+                            .addComponent(jScrollPane3)
+                            .addComponent(jLabel7))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -241,9 +240,9 @@ public class ConfigurationDialog extends javax.swing.JDialog {
                         .addComponent(jButtonRIght)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonLeft)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(jTextFieldRunTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -258,13 +257,15 @@ public class ConfigurationDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(jTextFieldThreads, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jTextFieldThreads, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButtonSave)
-                            .addComponent(jButtonCancel)))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(18, Short.MAX_VALUE))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonSave)
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         pack();
@@ -347,6 +348,7 @@ private String getToolTipText(MouseEvent e){
                 Integer.parseInt(jTextFieldRampUpTime.getText()),
                 Integer.parseInt(jTextFieldInterval.getText()),
                 Integer.parseInt(jTextFieldThreads.getText()));
+        JFrameMain.secs = Integer.parseInt(jTextFieldRunTime.getText());
         this.setVisible(false);
     }//GEN-LAST:event_jButtonSaveActionPerformed
 
@@ -487,7 +489,6 @@ private class MyListRenderer extends DefaultListCellRenderer
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonLeft;
     private javax.swing.JButton jButtonLoad;
     private javax.swing.JButton jButtonRIght;
@@ -498,6 +499,7 @@ private class MyListRenderer extends DefaultListCellRenderer
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabelOperations;
     private javax.swing.JList jListOperations;
     private javax.swing.JList jListPara;
