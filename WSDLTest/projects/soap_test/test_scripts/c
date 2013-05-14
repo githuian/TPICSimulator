@@ -1,0 +1,24 @@
+import urllib2
+import csv,random
+from itertools import islice
+
+class Transaction(object):
+    def __init__(self):
+        with open('GetCityWeatherByZIP.xml') as f:
+            self.soap_body = f.read()
+        temp = open('/home/hui/SimulationData/account_1.csv')
+        self.count = len(temp.readlines())
+        temp.close()
+        b = open('/home/hui/SimulationData/account_1.csv')
+        self.soap_arg1 = csv.reader(b)
+        self.soap_arg = list(self.soap_arg1)
+    
+    def run(self):
+        ran = random.randrange(1,self.count-2)
+        li = list(self.soap_arg)[ran]
+        for item in li:
+            self.soap_body = self.soap_body.replace('?XXX?',item,1)
+        req = urllib2.Request(url='http://wsf.cdyne.com/WeatherWS/Weather.asmx', data=self.soap_body)
+        req.add_header('Content-Type', 'text/xml')
+        resp = urllib2.urlopen(req)
+        content = resp.read()

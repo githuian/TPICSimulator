@@ -359,7 +359,7 @@ private String getToolTipText(MouseEvent e){
             JMenuItem item = new JMenuItem("Add Parameter File...");
             item.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    JFileChooser fc = new JFileChooser();
+                    JFileChooser fc = new JFileChooser("~/SimulationData");
                     int returnVal = fc.showOpenDialog(ConfigurationDialog.this);
 
                     if (returnVal == JFileChooser.APPROVE_OPTION) {

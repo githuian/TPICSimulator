@@ -24,10 +24,13 @@ import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
+import javax.swing.text.Document;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteException;
@@ -48,6 +51,7 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
     static ProgressMonitor pbar;
     static int secs;
     static int counter = 0;
+    Timer timer;
 
     /**
      * Creates new form JFrameMain
@@ -91,6 +95,7 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
         jScrollPane1.setBorder(javax.swing.BorderFactory.createTitledBorder("Report"));
 
         jEditorPaneResult.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jEditorPaneResult.setFocusable(false);
         jScrollPane1.setViewportView(jEditorPaneResult);
 
         jScrollPaneResultList.setBorder(javax.swing.BorderFactory.createTitledBorder("Results List"));
@@ -143,8 +148,8 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 493, Short.MAX_VALUE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE))))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -188,14 +193,15 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
 
         // Fire a timer every once in a while to update the progress.
         System.out.println("timer=" + secs);
-        Timer timer = new Timer(secs * 10, this);
+        timer = new Timer(secs * 10, this);
         timer.start();
         setVisible(true);
+        
 
         //
 
         // TODO add your handling code here:
-        
+
 
     }//GEN-LAST:event_jButtonSimulateActionPerformed
 
@@ -220,22 +226,42 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
 
     private void jListDirValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListDirValueChanged
         // TODO add your handling code here:
-        String folder = (String) jListDir.getSelectedValue();
-        String path = ResultData.PATH + folder + "/results.html";
-        try {
-            //
+        if (evt.getValueIsAdjusting() == false) {
+            String folder = (String) jListDir.getSelectedValue();
+            String path = ResultData.PATH + folder + "/results.html";
+            File f;
+            try {
+                //
 
-            File f = new File(path);
-            String apath = f.getAbsolutePath();
-            System.out.println(apath);
-            URL url1 = (new java.io.File(apath)).toURI().toURL();
-            System.out.println(url1.getPath());
 
-            jEditorPaneResult.setContentType("text/html");
-            jEditorPaneResult.setPage(url1);
 
-        } catch (IOException ex) {
-            Logger.getLogger(JFrameMain.class.getName()).log(Level.SEVERE, null, ex);
+                f = new File(path);
+                if (!f.exists()) {
+                    jEditorPaneResult.setText("no results found");
+                    System.out.println("no results");
+
+
+                } else {
+                    String apath = f.getAbsolutePath();
+                    System.out.println(apath);
+                    URL url1 = (new java.io.File(apath)).toURI().toURL();
+
+                    jEditorPaneResult.setContentType("text/html");
+                    jEditorPaneResult.setPage(url1);
+
+
+
+                }
+
+
+            } catch (IOException ex) {
+            } finally {
+                Document doc = jEditorPaneResult.getDocument();
+                doc.putProperty(Document.StreamDescriptionProperty, null);
+
+                
+
+            }
         }
     }//GEN-LAST:event_jListDirValueChanged
 
@@ -316,12 +342,16 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
         @Override
         protected void done() {
             //jProgressBarTask.setIndeterminate(false);
-            
+
             System.out.println("python finished");
             resultDataModel.refresh();
             jButtonSimulate.setEnabled(false);
-            System.out.println("reports "+ jListDir.getModel().getSize());
-            jListDir.setSelectedIndex(jListDir.getModel().getSize()-1);
+            System.out.println("reports " + jListDir.getModel().getSize());
+            jListDir.setSelectedIndex(jListDir.getModel().getSize() - 1);
+            pbar.close();
+            timer.stop();
+            counter = 0;
+            
 
 
         }
@@ -376,8 +406,8 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
                 //Logger.getLogger(JFrameMain.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
                 System.out.println("return");
-                
-                
+
+
                 return;
             }
         }
@@ -389,12 +419,17 @@ public class JFrameMain extends javax.swing.JFrame implements ActionListener,
             if (pbar.isCanceled()) {
                 task.cancel(true);
                 pbar.close();
+                return;
                 //System.exit(1);
             }
             if (!task.isDone()) {
                 pbar.setProgress(Math.min(counter, 99));
                 if (counter > 99) {
                     pbar.setNote("Generating reports...");
+                    if (counter > 199) {
+                        pbar.close();
+                        JOptionPane.showMessageDialog(null, "Timeout", "Timeout", JOptionPane.ERROR_MESSAGE);
+                    }
                 } else {
                     pbar.setNote("Operation is " + Math.min(counter, 99) + "% complete");
                 }

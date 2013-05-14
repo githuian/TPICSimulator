@@ -276,7 +276,9 @@ public class ConfigHandler {
     }
 
     public void generatePyForOp(WSDLData data) {
-        generatePy(FOLDER + data.getOp().getName() + ".py", data.getOp().getName() + ".xml", data.getWsdlPath());
+        Definitions wsdl = parseWSDL(data.getWsdlPath());
+        String address = wsdl.getServices().get(0).getPorts().get(0).getAddress().getLocation();
+        generatePy(FOLDER + data.getOp().getName() + ".py", data.getOp().getName() + ".xml", address);
     }
 
     public void generatePyWithArg(String path, String xmlFile, String url, String argPath) {
@@ -288,7 +290,9 @@ public class ConfigHandler {
     }
 
     public void generatePyWithArgForOp(WSDLData data, String argPath) {
-        generatePyWithArg(FOLDER + data.getOp().getName() + ".py", data.getOp().getName() + ".xml", data.getWsdlPath(), argPath);
+        Definitions wsdl = parseWSDL(data.getWsdlPath());
+        String address = wsdl.getServices().get(0).getPorts().get(0).getAddress().getLocation();
+        generatePyWithArg(FOLDER + data.getOp().getName() + ".py", data.getOp().getName() + ".xml", address, argPath);
     }
 
     private String getPy(String xmlFile, String url) {

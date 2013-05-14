@@ -1,0 +1,8 @@
+<s11:Envelope xmlns:s11='http://schemas.xmlsoap.org/soap/envelope/'>
+  <s11:Body>
+    <ns1:GetCityForecastByZIP xmlns:ns1='http://ws.cdyne.com/WeatherWS/'>
+<!-- optional -->
+      <ns1:ZIP>?XXX?</ns1:ZIP>
+    </ns1:GetCityForecastByZIP>
+  </s11:Body>
+</s11:Envelope>
